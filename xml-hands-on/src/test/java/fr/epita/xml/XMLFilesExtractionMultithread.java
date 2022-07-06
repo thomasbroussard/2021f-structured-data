@@ -13,22 +13,21 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class XMLFilesExtractionElia {
+public class XMLFilesExtractionMultithread {
 
 
     public static void main(String[] args) throws IOException {
-
-        Date start = new Date();
         StringBuilder fileContent = new StringBuilder();
         URL url = new URL("https://thomas-broussard.fr/presentation/data-structuration-and-transportation/xml/ml.zip");
 
         ZipInputStream zis = new ZipInputStream(url.openStream());
 
         ZipEntry ze = zis.getNextEntry();
+
+
         while (ze != null) {
               if (!ze.isDirectory()) {
                 try {
@@ -42,8 +41,6 @@ public class XMLFilesExtractionElia {
         }
         zis.close();
         Files.write(new File("output.csv").toPath(), fileContent.toString().getBytes(), StandardOpenOption.CREATE);
-        Date end = new Date();
-        System.out.println("processed in " + (end.getTime() - start.getTime()) + "ms");
     }
 
 
