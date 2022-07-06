@@ -3,10 +3,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.epita.json.City;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.OptionalDouble;
 
 public class TestJSONExtraction {
 
@@ -17,7 +15,12 @@ public class TestJSONExtraction {
         List<City> cities = mapper.readValue(
                 new URL("https://thomas-broussard.fr/presentation/data-structuration-and-transportation/json/fr.json"),
                 new TypeReference<List<City>>() {});
-        double average = cities.stream().mapToDouble(City::getPopulation).average().getAsDouble();
+
+        double average = cities
+                .stream()
+                .mapToDouble(City::getPopulation)
+                .average()
+                .getAsDouble();
 
         System.out.println("avg is : " + average);
     }
