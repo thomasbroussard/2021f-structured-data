@@ -22,12 +22,12 @@ public class XMLFilesExtractionElia {
 
     public static void main(String[] args) throws IOException {
 
-        Date start = new Date();
+
         StringBuilder fileContent = new StringBuilder();
         URL url = new URL("https://thomas-broussard.fr/presentation/data-structuration-and-transportation/xml/ml.zip");
 
         ZipInputStream zis = new ZipInputStream(url.openStream());
-
+        Date start = new Date();
         ZipEntry ze = zis.getNextEntry();
         while (ze != null) {
               if (!ze.isDirectory()) {

@@ -10,6 +10,7 @@
         <module name="delimiter-based-buffers" />
         <module name="xml-hands-on" />
         <module name="plain-text-demo" />
+        <module name="json-demo" />
       </profile>
     </annotationProcessing>
   </component>
