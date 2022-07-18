@@ -1,20 +1,12 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
+package fr.epita.etl;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+public class Transformer {
 
-public class TestJSONRestaurantsParsing {
 
-    public static void main(String[] args) throws IOException {
+    public Double transform(JsonNode jsonNode){
 
-        //extract
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(new URL("https://thomas-broussard.fr/presentation/data-structuration-and-transportation/json/file1.json"));
-
-        System.out.println(jsonNode.size());
 
         Double average = 0.0;
         int validNumber = 0;
@@ -41,7 +33,7 @@ public class TestJSONRestaurantsParsing {
                 String rating = aggregateRating.textValue();
                 Double aDouble = 0.0;
                 try{
-                   aDouble = Double.valueOf(rating);
+                    aDouble = Double.valueOf(rating);
                 }catch (Exception e){
                     continue;
                 }
@@ -51,9 +43,6 @@ public class TestJSONRestaurantsParsing {
             }
 
         }
-
-        //load
-        System.out.println("average is :" + (average / validNumber));
-
+        return average/validNumber;
     }
 }
