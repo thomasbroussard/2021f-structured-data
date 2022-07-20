@@ -1,0 +1,170 @@
+<html lang="en">
+    <head>
+        <title>Data Structuration and Transportation</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../../stylesheets/shower/themes/ribbon/styles/styles.css">
+        <link rel="stylesheet" href="../../stylesheets/custom-shower.css">
+        <link rel="stylesheet" href="../../stylesheets/hljs-themes/nord.css">
+        <style>
+            .shower {
+            --slide-ratio: calc(16 / 9);
+            }
+        </style>
+    </head>
+    <body class="shower list">
+
+        <header class="caption">
+            <h1>Data Structuration and Transportation: Getting data from the web</h1>
+        </header>
+
+
+        <section class="slide">
+            <h2>How to handle Data present in the Web? (1)</h2>
+            <b>Web Scraping = using data available through regular web pages</b>
+            <ul>
+                <li>Web scraping is a technique allowing to fetch data from web page</li>
+                <li>There is no common "format" that drives how data are contained in web pages</li>
+                <li>The web page may change at any time, so it does not represent a stable data source</li>
+            </ul>
+        </section>
+        <section class="slide">
+            <h2>How to handle Data present in the Web? (2)</h2>
+            <b>Html</b>
+            <ul>
+                <li>Content displayed from your web browser is contained in <code>html</code> (Hyper Text Markup Language) files</li>
+                <li><code>html</code> is a markup language, close to xml, but with less constraints</li>
+                <li>the browser is highly <b>fault tolerant</b>, not many websites would display at all if the browser was strictly enforcing standards</li>
+            </ul>
+        </section>
+        <section class="slide">
+            <h2>How to handle Data present in the Web? (3)</h2>
+            <b>Html - example</b>
+            <p>what you have seen in the previous slide is coded this:</p>
+            <pre><code class="html">&lt;section class="slide">
+                &lt;h2>How to handle Data present in the Web? (2)&lt;/h2>
+                &lt;p>Html&lt;/p>
+                &lt;ul>
+                &lt;li>Content displayed from your web browser is contained in &lt;code>html&lt;/code> (Hyper Text Markup Language) files&lt;/li>
+                &lt;li>&lt;code>html&lt;/code> is a markup language, close to xml, but with less constraints&lt;/li>
+                &lt;li>the browser is highly &lt;b>fault tolerant&lt;/b>, not many websites would display at all if the browser was strictly enforcing standards&lt;/li>
+                &lt;/ul>
+                &lt;/section></code></pre>
+        </section>
+        <section class="slide full-height">
+            <h2>How to handle Data present in the Web? (3)</h2>
+            <b>Difference between DOM and html</b>
+            <ul>
+                <li>When there's a "fault" in the html file, the browser will do its best to correct it</li>
+                <li>What you see is the <b>rendered DOM</b> (Document Object Model) and not the raw html anymore</li>
+                <li>When a JavaScript action occurs, it works on this DOM object (in memory), not on the html file anymore</li>
+            </ul>
+            <b>This is why there is quite always a difference between what you see in your browser, and what is fetched from the html page</b> (and this is really important for web scraping)
+        </section>
+        <section class="slide">
+            <h2>How to handle Data present in the Web? (4)</h2>
+            <b>DOM vs html: example</b>
+            <ul>
+                <li>DOM can be accessed via the developers tools (on chrome F12 key)</li>
+                <li>navigate to : <a href="https://react.microfrontends.app/">this sample SPA</a>(Single Page Application)</li>
+                <li>Right click on the page, and select "view source"</li>
+                <li>Now go back to the original page, and press F12 to open the developers tools</li>
+                <li>compare the raw html (view source) vs the rendered DOM (F12), quite different isn't it?</li>
+            </ul>
+        </section>
+
+        <section class="slide">
+            <h2>How to get Data present in the Web?</h2>
+            <p>Exercise: working on a manual extract</p>
+            <ul>
+                <li>Navigate <a href="https://en.wikipedia.org/wiki/Human_Development_Index">here</a></li>
+                <li>Think about the best way to extract the table of Human Development Index (whatever technique is acceptable)</li>
+                <li>produce a csv from it as fast as you can, it does not have to be automated! (+1 for the 3 first valid submissions)</li>
+            </ul>
+        </section>
+        <section class="slide full-height">
+            <h2>How to get Data present in the Web?</h2>
+            <b>Exercise: fetch data from a web page and convert it to an Orange Data Table</b>
+            <ul>
+                <li>Go to this web page <a href="https://en.wikipedia.org/wiki/List_of_international_airports_by_country">wikipedia/airports</a></li>
+                <li>use the provided snippet to extract from the xml document a list of Regions (h2 tags)</li>
+            </ul>
+            <pre><code>from lxml import etree
+                import requests
+                from bs4 import BeautifulSoup as bs
+
+
+                def getContent(link: str) -> str:
+                webPage = requests.get(link)
+                return str(bs(webPage.content, "html.parser"))
+
+
+                content: str = getContent("https://en.wikipedia.org/wiki/List_of_international_airports_by_country")
+                html: etree.ElementBase = etree.HTML(content)</code></pre>
+        </section>
+        <section class="slide full-height">
+            <h2>How to get Data present in the Web? (2)</h2>
+            <ul>
+                <li>Now a bit harder task : extract the list of airports with their cities, countries, regions and IATA Code</li>
+                <li>The target data table rows will look like this row:
+                    <pre><code>['Americas', 'Caribbean', 'Cuba', 'Holguín', 'Frank País Airport', 'HOG']</code></pre>
+                    following this format <code>[Region, SubRegion, Country, City, Airport name, IATA Code]</code>
+                </li>
+                <li>You will probably need this snippet <pre><code>allNodes: list[etree.ElementBase] = html.xpath(RELATIVE_ROOT+"/*")
+                    length: int = len(allNodes)
+                    #...
+                    node: etree.ElementBase = allNodes[i]
+                    if node.tag == 'h2' and h2Count != 0:
+                    currentRegion = node.xpath("./span[@class='mw-headline'][1]")[0].text
+                </code></pre></li>
+            </ul>
+
+        </section>
+
+        <section class="slide">
+            <h2>Limits of direct html fetching</h2>
+
+            <ul><li>Fetching the html page is more reliable when it works</li>
+                <li>Sometimes javascript is required</li>
+                <li>In that case you need a "ghost" browsing, meaning you simulate the interaction between the browser and the website</li>
+                <li>an example of this, using selenium, here: <a href="https://www.scrapingbee.com/blog/selenium-python/">tutorial</a> </li>
+            </ul>
+
+        </section>
+
+        <section class="slide">
+            <h2>When to use scraping?</h2>
+            <strong>Short answer: when you cannot do otherwise</strong>
+            <p>Longer answer: beware of the automation cost, verify that it is worthing it!</p>
+            <ul>
+                <li>You can use scraping when data volume is too large (to do it manually)</li>
+                <li>Limit the effort (when possible) to reference data that will not move too much (web pages can be updated at any time!)</li>
+            </ul>
+        </section>
+        <section class="slide full-height">
+            <h2>Automation: Theory vs Reality</h2>
+            <img alt="sth" style="display: block;text-align: center" src="https://imgs.xkcd.com/comics/automation.png"/>
+        </section>
+
+        <section class="slide">
+            <h2>Other web data you can fetch</h2>
+            <b>REST and XML</b>
+            <p># curl -i -H "Accept:application/xml" -H "Content-Type:application/xml" -XGET "https://gorest.co.in/public-api/users.xml"
+                GET https://gorest.co.in/public-api/users.xml
+                Accept: application/xml
+                Content-Type: application/xml
+                ###</p>
+        </section>
+
+
+
+        <div class="progress"></div>
+
+        <script src="../../scripts/shower2/shower.min.js"></script>
+        <script src="../../scripts/hljs/highlight.pack.js"></script>
+        <script>
+            hljs.initHighlightingOnLoad();
+        </script>
+
+    </body>
+</html>

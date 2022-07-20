@@ -9,6 +9,7 @@
         <module name="fixed-lenght-buffer" />
         <module name="delimiter-based-buffers" />
         <module name="xml-hands-on" />
+        <module name="camel-demo" />
         <module name="plain-text-demo" />
         <module name="json-demo" />
       </profile>
